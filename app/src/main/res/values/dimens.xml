@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="toolbar_height">300dp</dimen>
+    <dimen name="recycler_view_item_height">48dp</dimen>
+    <dimen name="profile_picture_expanded_size">100dp</dimen>
+    <dimen name="profile_picture_collapsed_size">48dp</dimen>
+    <dimen name="profile_title_margin">24dp</dimen>
+    <dimen name="profile_image_margin">24dp</dimen>
+</resources>
