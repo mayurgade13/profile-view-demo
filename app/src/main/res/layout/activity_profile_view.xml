@@ -6,7 +6,6 @@
     android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".ProfileViewActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -36,26 +35,18 @@
                     android:src="@drawable/profile_background" />
             </FrameLayout>
 
-            <FrameLayout
-                android:id="@+id/background"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fitsSystemWindows="true" />
-
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:title=""
                 app:layout_collapseMode="pin"
-                android:visibility="invisible"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                android:visibility="invisible" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="wrap_content"
                 android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="start"
                 android:fontFamily="monospace"
                 android:gravity="center"
                 android:layout_marginStart="@dimen/profile_title_margin"
@@ -68,21 +59,10 @@
                 tools:visibility="visible" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/title_workaround"
-                android:layout_width="wrap_content"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:visibility="invisible"
-                app:layout_collapseMode="pin"
-                tools:visibility="invisible" />
-
-            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/profile_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
+                android:layout_gravity="center_vertical"
                 android:layout_margin="@dimen/profile_title_margin"
                 android:fontFamily="monospace"
                 android:gravity="center"
