@@ -1,10 +1,8 @@
 package com.example.profileview
 
-import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.View
-import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
@@ -26,8 +24,7 @@ class ProfileViewActivity : AppCompatActivity() {
     private lateinit var appBarLayout: AppBarLayout
     private lateinit var profileImageTitle: AppCompatTextView
     private lateinit var toolbarTitle: AppCompatTextView
-    private lateinit var workaroundView: AppCompatTextView
-    private lateinit var profileBackground: FrameLayout
+    private lateinit var profileBackground: ImageView
 
     private var toolbarHorizontalMargin = 0F
     private var toolbarVerticalMargin = 0F
@@ -63,8 +60,7 @@ class ProfileViewActivity : AppCompatActivity() {
         profileImage = binding.profileImage
         profileImageTitle = binding.profileTitle
         toolbarTitle = binding.toolbarTitle
-        profileBackground = binding.background
-        workaroundView = binding.titleWorkaround
+        profileBackground = binding.profileBackground
 
         // Setup recycler view with list items
         setupRecyclerView()
@@ -77,29 +73,29 @@ class ProfileViewActivity : AppCompatActivity() {
         appBarLayout.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { appBarLayout, offset ->
                 if (areAnimationPropertiesInitialized.not()) {
-                    profileImageAnimateStartPointY =
-                            abs((appBarLayout.height - (PROFILE_IMAGE_EXPANDED_SIZE + toolbarHorizontalMargin))
-                                    / appBarLayout.totalScrollRange) / 2
+                    // profileImageAnimateStartPointY = OF indicates start profile picture animation
+                    // from initial position. 0.5F is middle point between expand and collapse state
+                    profileImageAnimateStartPointY = 0F
                     profileCollapseAnimationChangeWeight = 1 / (1 - profileImageAnimateStartPointY)
                     toolbarVerticalMargin = (toolbar.height - PROFILE_IMAGE_COLLAPSED_SIZE) * 2
                     areAnimationPropertiesInitialized = true
                 }
-                updateViews(this, abs(offset / appBarLayout.totalScrollRange.toFloat()))
+                updateViews(abs(offset / appBarLayout.totalScrollRange.toFloat()))
             }
         )
     }
 
-    private fun updateViews(context: Context, offset: Float) {
+    private fun updateViews(offset: Float) {
         // Control the visibility of toolbar title
         when (offset) {
-            in 0.15F..1F -> {
+            in 0.25F..1F -> {
                 profileImageTitle.apply {
                     if (visibility != View.VISIBLE) visibility = View.VISIBLE
                     alpha = (1 - offset) * 0.35F
                 }
             }
 
-            in 0F..0.15F -> {
+            in 0F..0.25F -> {
                 profileImageTitle.alpha = (1f)
                 profileImage.alpha = 1f
             }
@@ -114,19 +110,13 @@ class ProfileViewActivity : AppCompatActivity() {
                 cashCollapseState != null && cashCollapseState != this -> {
                     when (first) {
                         TO_EXPANDED ->  {
-                            // Set profile picture's initial position
-                            profileImage.translationX = 0F
                             // Initially hide title on toolbar
                             toolbarTitle.visibility = View.INVISIBLE
                         }
-                        TO_COLLAPSED -> profileBackground.apply {
-                            // Show title on toolbar with animation
-                            toolbarTitle.apply {
-                                visibility = View.VISIBLE
-                                alpha = 0F
-                                animate().setDuration(500).alpha(1.0f)
+                        // Show title on toolbar with animation
+                        TO_COLLAPSED -> toolbarTitle.apply {
+                                animate().setDuration(200).alpha(1.0f).withEndAction { visibility = View.VISIBLE }
                             }
-                        }
                     }
                     cashCollapseState = Pair(first, SWITCHED)
                 }
@@ -147,7 +137,9 @@ class ProfileViewActivity : AppCompatActivity() {
                             it.height = profileImageSize.roundToInt()
                             it.width = profileImageSize.roundToInt()
                         }
-                        workaroundView.setTextSize(TypedValue.COMPLEX_UNIT_PX, offset)
+
+                        // Update the scale and position on profile image
+                        profileImage.requestLayout()
 
                         this.translationX =
                                 (appBarLayout.width - toolbarHorizontalMargin - profileImageSize) * profileImageCollapseAnimateOffset
